@@ -1,0 +1,21 @@
+@page "/"
+
+<PageTitle>Forms &amp; Validation Lab</PageTitle>
+
+<h1>Blazor forms and validation</h1>
+<p class="lead">One registration model, validated with built-in attributes, custom attributes, cross-field rules and a server-side check.</p>
+
+<table class="table">
+    <thead><tr><th>Technique</th><th>Where</th></tr></thead>
+    <tbody>
+        <tr><td>Built-in attributes (<code>[Required]</code>, <code>[EmailAddress]</code>, <code>[Compare]</code>)</td><td><code>Models/RegistrationForm.cs</code></td></tr>
+        <tr><td>Custom attributes (<code>[MinimumAge]</code>, <code>[UaeMobile]</code>, <code>[MustBeTrue]</code>)</td><td><code>Validation/ValidationAttributes.cs</code></td></tr>
+        <tr><td>Cross-field rules with <code>IValidatableObject</code></td><td><code>RegistrationForm.Validate</code></td></tr>
+        <tr><td>Async server check shown inline (<code>ValidationMessageStore</code>)</td><td><code>Components/Forms/ServerSideValidator.cs</code></td></tr>
+        <tr><td>Same fields in a static SSR form with enhanced posts</td><td><code>Components/Pages/RegisterStatic.razor</code></td></tr>
+    </tbody>
+</table>
+
+<p>Try <code>taken@example.com</code> as the email to see the server-side check.</p>
+<a class="btn btn-primary" href="register">Open the interactive form</a>
+<a class="btn btn-outline-primary" href="register-static">Open the static form</a>

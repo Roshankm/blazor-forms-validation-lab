@@ -1,0 +1,48 @@
+@page "/register-static"
+@inject IEmailAvailability EmailAvailability
+
+<PageTitle>Static SSR form</PageTitle>
+
+<h1>Static SSR registration form</h1>
+<p class="text-muted">
+    No WebSocket and no WebAssembly: the form posts back (with antiforgery) and the server renders the result.
+    Validation runs on the server with the same model and attributes.
+</p>
+
+@if (_registered is not null)
+{
+    <div class="alert alert-success" data-test="success">Welcome, <strong>@_registered</strong>. Your account is ready.</div>
+}
+else
+{
+    <EditForm Model="Model" FormName="register" OnValidSubmit="SubmitAsync" Enhance class="col-lg-9">
+        <DataAnnotationsValidator />
+        <ServerSideValidator @ref="_serverValidator" />
+        <ValidationSummary class="alert alert-danger small" />
+
+        <RegistrationFields Model="Model!" />
+
+        <button type="submit" class="btn btn-primary mt-4">Create account</button>
+    </EditForm>
+}
+
+@code {
+    private ServerSideValidator? _serverValidator;
+    private string? _registered;
+
+    [SupplyParameterFromForm]
+    private RegistrationForm? Model { get; set; }
+
+    protected override void OnInitialized() => Model ??= new();
+
+    private async Task SubmitAsync()
+    {
+        if (!await EmailAvailability.IsAvailableAsync(Model!.Email))
+        {
+            _serverValidator!.DisplayError(nameof(RegistrationForm.Email), "This email is already registered.");
+            return;
+        }
+
+        _registered = Model.FullName;
+    }
+}

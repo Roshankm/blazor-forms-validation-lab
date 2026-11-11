@@ -1,0 +1,49 @@
+@* Interactive form: validates as you type, checks the email on the server when submitted. *@
+@inject IEmailAvailability EmailAvailability
+
+@if (_registered is not null)
+{
+    <div class="alert alert-success" data-test="success">
+        Welcome, <strong>@_registered</strong>. Your account is ready.
+    </div>
+}
+else
+{
+    <EditForm Model="_model" OnValidSubmit="SubmitAsync">
+        <DataAnnotationsValidator />
+        <ServerSideValidator @ref="_serverValidator" />
+        <ValidationSummary class="alert alert-danger small" />
+
+        <RegistrationFields Model="_model" />
+
+        <button type="submit" class="btn btn-primary mt-4" disabled="@_checking">
+            @(_checking ? "Checking..." : "Create account")
+        </button>
+    </EditForm>
+}
+
+@code {
+    private readonly RegistrationForm _model = new();
+    private ServerSideValidator? _serverValidator;
+    private bool _checking;
+    private string? _registered;
+
+    private async Task SubmitAsync()
+    {
+        _checking = true;
+        try
+        {
+            if (!await EmailAvailability.IsAvailableAsync(_model.Email))
+            {
+                _serverValidator!.DisplayError(nameof(RegistrationForm.Email), "This email is already registered.");
+                return;
+            }
+
+            _registered = _model.FullName;
+        }
+        finally
+        {
+            _checking = false;
+        }
+    }
+}

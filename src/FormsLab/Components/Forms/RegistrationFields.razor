@@ -1,0 +1,62 @@
+@* The inputs shared by the interactive and the static form. Must sit inside an EditForm. *@
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label" for="fullName">Full name</label>
+        <InputText id="fullName" class="form-control" @bind-Value="Model.FullName" />
+        <ValidationMessage For="() => Model.FullName" />
+    </div>
+    <div class="col-md-6">
+        <label class="form-label" for="email">Email</label>
+        <InputText id="email" type="email" class="form-control" @bind-Value="Model.Email" />
+        <ValidationMessage For="() => Model.Email" />
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label" for="dob">Date of birth</label>
+        <InputDate id="dob" class="form-control" @bind-Value="Model.DateOfBirth" />
+        <ValidationMessage For="() => Model.DateOfBirth" />
+    </div>
+    <div class="col-md-6">
+        <label class="form-label" for="phone">UAE mobile</label>
+        <InputText id="phone" class="form-control" placeholder="+971 50 123 4567" @bind-Value="Model.Phone" />
+        <ValidationMessage For="() => Model.Phone" />
+    </div>
+
+    <div class="col-12">
+        <span class="form-label d-block">Preferred contact</span>
+        <InputRadioGroup @bind-Value="Model.ContactPreference">
+            @foreach (var option in Enum.GetValues<ContactPreference>())
+            {
+                <div class="form-check form-check-inline">
+                    <InputRadio id="@($"contact-{option}")" class="form-check-input" Value="option" />
+                    <label class="form-check-label" for="@($"contact-{option}")">@option</label>
+                </div>
+            }
+        </InputRadioGroup>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label" for="password">Password</label>
+        <InputText id="password" type="password" class="form-control" @bind-Value="Model.Password" />
+        <ValidationMessage For="() => Model.Password" />
+    </div>
+    <div class="col-md-6">
+        <label class="form-label" for="confirm">Confirm password</label>
+        <InputText id="confirm" type="password" class="form-control" @bind-Value="Model.ConfirmPassword" />
+        <ValidationMessage For="() => Model.ConfirmPassword" />
+    </div>
+
+    <div class="col-12">
+        <div class="form-check">
+            <InputCheckbox id="terms" class="form-check-input" @bind-Value="Model.AcceptTerms" />
+            <label class="form-check-label" for="terms">I accept the terms</label>
+        </div>
+        <ValidationMessage For="() => Model.AcceptTerms" />
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public RegistrationForm Model { get; set; } = default!;
+}
